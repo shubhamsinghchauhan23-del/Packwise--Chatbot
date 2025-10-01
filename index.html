@@ -2,64 +2,104 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PackWise AI – Smart Packaging Waste Reduction</title>
+  <title>PackWise AI Chatbot</title>
   <style>
-    body { font-family: Arial, sans-serif; background:#f8f9fa; color:#333; margin:0; padding:0;}
+    body { font-family: Arial, sans-serif; background:#f4f4f9; margin:0; padding:0;}
     .header {background:#2a9d8f; color:white; padding:20px; text-align:center;}
-    .tagline {font-size:20px; margin-top:5px;}
-    .section {padding:20px;}
-    .chat-box {background:white; border:1px solid #ddd; border-radius:10px; padding:15px; margin-bottom:20px;}
-    .chat-turn {margin:10px 0;}
-    .agent-panel {background:#f1f1f1; border-radius:10px; padding:15px;}
-    .cta {text-align:center; margin-top:20px;}
-    .cta button {background:#e76f51; color:white; border:none; padding:15px 30px; font-size:18px; border-radius:5px; cursor:pointer;}
-    .assumptions {font-size:12px; margin-top:20px; border-top:1px solid #ccc; padding-top:10px;}
+    .tagline {font-size:18px; margin-top:5px;}
+    .container {display:flex; flex-direction: row; height: calc(100vh - 100px);}
+    .chat-area {flex:1; padding:20px; display:flex; flex-direction:column; justify-content: space-between;}
+    .messages {overflow-y:auto; flex:1; border:1px solid #ddd; background:white; border-radius:8px; padding:10px;}
+    .message {margin:8px 0;}
+    .message.user {text-align:right; color:#333;}
+    .message.bot {text-align:left; color:#005f73;}
+    .input-area {margin-top:10px;}
+    .input-area input {width:80%; padding:10px; border:1px solid #ccc; border-radius:4px;}
+    .input-area button {padding:10px; background:#e76f51; color:white; border:none; border-radius:4px; cursor:pointer;}
+    .panel {width:300px; background:#fff; border-left:1px solid #ccc; padding:20px; display:flex; flex-direction: column;}
+    .plan-toggle {background:#264653; color:white; padding:10px; border:none; border-radius:4px; cursor:pointer; margin-bottom:10px;}
+    .steps {display:none; margin-top:10px; }
+    .steps ol {padding-left:20px;}
+    .assumptions {margin-top:auto; font-size:12px; color:#555; border-top:1px solid #ddd; padding-top:10px;}
   </style>
 </head>
 <body>
   <div class="header">
     <h1>PackWise AI</h1>
-    <div class="tagline">Cut Waste, Save Costs, Stay Compliant</div>
+    <div class="tagline">Smart packaging & waste reduction assistant</div>
   </div>
-
-  <div class="section">
-    <p><strong>Problem:</strong> Excess plastic packaging is harming the planet.</p>
-    <p><strong>User:</strong> FMCG brands and e-commerce retailers seeking sustainable packaging.</p>
-  </div>
-
-  <div class="section">
-    <div class="chat-box">
-      <div class="chat-turn"><b>User:</b> Show me packaging footprint for SKU123 (shampoo bottle).</div>
-      <div class="chat-turn"><b>PackWise AI:</b> SKU123 uses 230g of plastic + cardboard; recyclability score: 45%.</div>
-      <div class="chat-turn"><b>User:</b> Suggest an eco-friendly alternative.</div>
-      <div class="chat-turn"><b>PackWise AI:</b> Recycled PET bottle (60% rPET) + lighter box saves 18% weight, cost-neutral.</div>
-      <div class="chat-turn"><b>User:</b> Draft supplier request.</div>
-      <div class="chat-turn"><b>PackWise AI:</b> Created RFP: "230ml shampoo packaging with 60% rPET, ≤15% weight increase, full recyclability."</div>
+  <div class="container">
+    <div class="chat-area">
+      <div class="messages" id="messages">
+        <div class="message bot">Hi! I’m PackWise AI. Ask me about packaging footprint, alternatives, or compliance.</div>
+      </div>
+      <div class="input-area">
+        <input type="text" id="userInput" placeholder="Type your message…" />
+        <button onclick="sendMessage()">Send</button>
+      </div>
     </div>
-
-    <div class="agent-panel">
-      <h3>View Plan</h3>
-      <ol>
-        <li><b>Plan:</b> Identify high-waste SKU → SKU123 selected.</li>
-        <li><b>Action:</b> Recommend recycled PET & lighter carton.</li>
-        <li><b>Result:</b> 18% packaging reduction + cost-neutral design.</li>
-      </ol>
+    <div class="panel">
+      <button class="plan-toggle" onclick="togglePlan()">View Plan</button>
+      <div class="steps" id="planSteps">
+        <h4>Agent Plan</h4>
+        <ol>
+          <li>Analyze SKU data</li>
+          <li>Generate recommendations</li>
+          <li>Draft supplier RFP & report</li>
+        </ol>
+      </div>
+      <div class="assumptions">
+        <p><strong>Assumptions:</strong></p>
+        <ul>
+          <li>Supplier databases up-to-date</li>
+          <li>Cost neutrality achievable</li>
+          <li>Consumers respond to eco-labels</li>
+        </ul>
+        <p><em>Ethics note: Simulated demo, responses are precoded.</em></p>
+      </div>
     </div>
   </div>
 
-  <div class="cta">
-    <button>Get Your Free Packaging Audit</button>
-    <p><em>Based on Ellen MacArthur Foundation Global Commitment (2024)</em></p>
-  </div>
+  <script>
+    function togglePlan() {
+      const steps = document.getElementById('planSteps');
+      if (steps.style.display === 'none' || steps.style.display === '') {
+        steps.style.display = 'block';
+      } else {
+        steps.style.display = 'none';
+      }
+    }
 
-  <div class="section assumptions">
-    <p><b>Top 3 Assumptions:</b></p>
-    <ul>
-      <li>Supplier databases have updated recycled-material availability.</li>
-      <li>Cost neutrality is possible with ≥10% weight reduction.</li>
-      <li>Consumers prefer labeled eco-packaging.</li>
-    </ul>
-    <p><em>Ethics note: Demo only — no real data stored; preferences/actions are mocked.</em></p>
-  </div>
+    function sendMessage() {
+      const inputEl = document.getElementById('userInput');
+      const text = inputEl.value.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      inputEl.value = '';
+
+      // Simple canned responses
+      setTimeout(() => {
+        let reply = "Sorry, I didn’t understand that.";
+        const l = text.toLowerCase();
+        if (l.includes('footprint') || l.includes('mass')) {
+          reply = "Your SKU has ~230 g packaging weight, recyclability 45%.";
+        } else if (l.includes('alternative') || l.includes('suggest')) {
+          reply = "Try using 60% rPET bottle + lighter carton; may reduce weight by 18%.";
+        } else if (l.includes('rpf') || l.includes('supplier brief') || l.includes('report')) {
+          reply = "I generated supplier brief and compliance narrative ready to share.";
+        }
+        addMessage(reply, 'bot');
+      }, 800);
+    }
+
+    function addMessage(text, who) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'message ' + who;
+      msgDiv.innerText = text;
+      const msgs = document.getElementById('messages');
+      msgs.appendChild(msgDiv);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+  </script>
 </body>
 </html>
